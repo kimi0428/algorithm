@@ -1,0 +1,88 @@
+Follow up是这样的：有两个数据中心A，B。 A有如下一个log比如[1,4],[6,8].表示1-4和6-8机器down掉,假设log里的range是经过merge interval后产生的。机器B比如是[2,5]. 然后产生一个综合日志 [1,2,1] [2,4,0] [4,5,1]......比如[4,5,1]表示range[4,5]只有一个数据中心能工作
+
+
+struct Point{
+    int num;
+    int flag;
+    Point() {}
+    Point(int n, int f) : num(n), flag(f) {}
+    Point(const Point& p) {
+        num = p.num;
+        flag = p.flag;
+    }
+};
+
+struct Record {
+    Point point;
+    int count;
+    Record(Point p, int c) {
+        point = p;
+        count = c;
+    }
+};
+
+class comp{
+public:
+    bool operator()(const Point& a, const Point& b){
+        if(a.num == b.num) return a.flag < b.flag;
+        return a.num < b.num;
+    }
+};
+
+vector<vector<int>> getResult(vector<Record> records) {
+    vector<vector<int>> res;
+    int start = records[0].point.num;
+    int val = records[0].count;
+    for(int i = 1; i < records.size(); ++i) {
+        res.push_back(vector<int>{start, records[i].point.num, 2 - val});
+        start = records[i].point.num;
+        val = records[i].count;
+    }
+    return res;
+}
+
+vector<vector<int>> compute(vector<pair<int, int>> A, vector<pair<int, int>> B) {
+    vector<Point> points;
+    for(auto& a : A) {
+        points.push_back(Point(a.first, 1));
+        points.push_back(Point(a.second, 0));
+    }
+    
+    for(auto& a : B) {
+        points.push_back(Point(a.first, 1));
+        points.push_back(Point(a.second, 0));
+    }
+    
+    sort(points.begin(), points.end(), comp());
+    vector<Record> records;
+    int count = 0;
+    for(Point p : points) {
+        if(p.flag == 1) {
+            count++;
+        } else {
+            count--;
+        }
+        records.push_back(Record(p, count));
+    }
+    
+    return getResult(records);
+}
+
+
+
+
+int main() {
+    vector<pair<int, int>> A;
+    vector<pair<int, int>> B;
+    A.push_back(make_pair(1,4));
+    A.push_back(make_pair(6,8));
+    B.push_back(make_pair(2,5));
+    for(vector<int> v: compute(A, B)) {
+        for(int i : v) {
+            cout << i << " ";
+        }
+        cout << endl;
+    }
+}
+
+
