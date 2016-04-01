@@ -1,0 +1,35 @@
+Given a string, find the consecutive number in the string
+
+example: 11121315
+return: 14
+
+bool helper(const string& s, int pre, int pos, int& res) {
+    if(pos == s.size() && res != -1) {
+        return true;
+    }
+    // check if the next number is consecutive
+    string nextNum = to_string(pre + 1);
+    bool find = (s.substr(pos, nextNum.length()) == nextNum);
+    if(find) {
+        return helper(s, stoi(nextNum), pos + nextNum.length(), res);
+    } else {
+        string number = to_string(pre + 2);
+        bool findthird = (s.substr(pos, number.length()) == number);
+        if(findthird) {
+            res = pre + 1;
+            return true;
+        } else {
+            return false;
+        }
+    }
+}
+
+int findTheMissinNumber(const string& s) {
+    int res = -1;
+    for(int len = 1; len <= s.length() / 2; ++len) {
+        if(helper(s, stoi(s.substr(0, len)), len, res)) {
+            break;
+        }
+    }
+    return res;
+}
