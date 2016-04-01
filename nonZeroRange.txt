@@ -1,0 +1,28 @@
+given an array of integers return the ranges of the nonzero elements
+
+Example:
+[4, 7, 9, 0, 3, 0]
+
+return [0,2], [4,4]
+
+vector<pair<int, int>> nonZeroRange(const vector<int>& nums) {
+    vector<pair<int, int>> res;
+    if(nums.size() == 0) return res;
+    int i = -1;
+    int j = 0;
+    for(; j < nums.size(); ++j) {
+        if(nums[j] != 0) {
+            if(i == -1) {
+                i = j;
+            }
+        } else {
+            if(i == -1) continue;
+            res.push_back(make_pair(i, j-1));
+            i = -1;
+        }
+    }
+    if(i != -1) {
+        res.push_back(make_pair(i, j-1));
+    }
+    return res;
+}
