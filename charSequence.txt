@@ -1,0 +1,32 @@
+判断字符串s是否是按照顺序规则字符串t排好序的。t规定哪个字符该出现在哪个前面。t是有效的顺序字符串。即每个字符不会出现多次，但也不确保26个字母都有。s中某些字符可能不在t中，那么这些字符必须得跟自己相同的字符成群出现（不能有脱离群体单独出现的）。. 鐣欏鐢宠璁哄潧-涓€浜╀笁鍒嗗湴
+
+e.g.: 
+s= "ccbbfffffaaaa"  t="cba" => true 因为t规定c在b前，b在a前出现，s确实如此。f不在t中出现，但f是成群出现的。因此符合。
+s= "ccbbfffffaaaaffff"  t="cba" => false， f没有成群出现
+
+bool function(string source, unordered_map<char, int>& hash) {
+    bool flag = false;
+    char prev = 0;
+    vector<int> exist(256,-1);
+    for(size_t i = 0; i < source.size(); ++i) {
+        char tmp = source[i];
+        if(hash.find(source[i]) == hash.end()) {
+            if(exist[tmp] != -1) return false;
+            flag = true;
+        } else {
+            flag = false;
+        }
+        while(i < source.size() && tmp == source[i]) {
+            i++;
+        }
+        i--;
+        exist[tmp] = i;
+        if(!flag) {
+            if(prev != 0) {
+                if(hash[prev] > hash[tmp]) return false;
+            }
+            if(hash.count(tmp) > 0) prev = tmp;
+        }
+    }
+    return true;
+}

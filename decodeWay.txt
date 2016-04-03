@@ -1,0 +1,24 @@
+void helper(vector<string>& res, const string& source, int pos, string& s, unordered_map<int , char>& hash) {
+    if(pos == source.size()) {
+        res.push_back(s);
+        return ;
+    }
+    int val = 0;
+    for(int i = pos; i < source.size(); ++i) {
+        val = val * 10 + source[i] - '0';
+        if(val == 0 || (val % 10 == 0 && val / 10 > 2) || hash.find(val) == hash.end()) {
+            return;
+        }
+        s += hash[val];
+        helper(res, source, i + 1, s, hash);
+        s.pop_back();
+    }
+}
+
+
+vector<string> func(const string& source, unordered_map<int , char>& hash) {
+    vector<string> res;
+    string s = "";
+    helper(res, source, 0, s, hash);
+    return res;
+}

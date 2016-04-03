@@ -1,0 +1,22 @@
+longest substring with at most k charactors
+
+
+string longestSubstringWithKchar(const string& s, int k) {
+	int i = 0;
+	string res = "";
+	unordered_map<char, int> hash;
+	for(int j = 0; j < s.size(); ++j) {
+		hash[s[j]]++;
+		while(hash.size() > k) {
+			hash[s[i]]--;
+			if(hash[s[i]] == 0) {
+				hash.erase(hash[s[i]);
+			}
+			i++;
+		}
+		if(j - i + 1 > res.size()) {
+			res = s.substr(i, j - i + 1);
+		}
+	}
+	return res;
+}

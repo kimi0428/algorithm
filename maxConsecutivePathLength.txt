@@ -1,0 +1,66 @@
+general树（子节点数量不定）中找出最长的连续整数链条长度，每个节点都是int值。问：怎么表示树节点（要写class定义）？
+follow up： 如果不是树而是DAG图怎么做？怎么表示图的节点？考虑哪些问题？怎么优化？
+
+struct TreeNode {
+    int val;
+    vector<TreeNode*> children;
+};
+
+int helper(TreeNode* node, TreeNode* parent, int len) {
+    if(node == NULL) return 0;
+    len = (parent != NULL && parent->val + 1 == node->val) ? len + 1 : 1;
+    int tmp = len;
+    for(int i = 0; i < node->children.size(); ++i) {
+        TreeNode* child = node->children.at(i);
+        int res = helper(child, node, tmp);
+        len = max(len, res);
+    }
+    return len;
+}
+
+int longestConsecutive(TreeNode* node) {
+    return helper(node, NULL, 0);
+}
+
+
+-------------------------------------------------------------------------------
+struct GraphNode {
+    int val;
+    vector<GraphNode*> node;
+};
+
+struct Graph {
+    vector<GraphNode*> graphNode;
+};
+
+
+int dfs(int& res, unordered_map<GraphNode*, int>& hash, GraphNode* node) {
+    if(node == NULL) return 0;
+    if(hash.find(node) != hash.end()) {
+        return hash[node];
+    }
+    int currLen = 1;
+    int nextLen = 0;
+    for(auto& child : node->node) {
+        int len = dfs(res, hash, child);
+        if(node->val + 1 == child->val) {
+            nextLen = max(nextLen, len);
+        }
+    }
+    if(currLen + nextLen > res) {
+        res = currLen + nextLen;
+    }
+    hash[node] = currLen + nextLen;
+    return hash[node];
+}
+
+int longestConsecutive(Graph* g) {
+    unordered_map<GraphNode*, int> hash;
+    int len = 0;
+    for(auto& node : g->graphNode) {
+        if(hash.find(node) == hash.end()) {
+            dfs(len, hash, node);
+        }
+    }
+    return len;
+}
