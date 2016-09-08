@@ -1,0 +1,68 @@
+struct TreeNode {
+    int val;
+    TreeNode *left;
+    TreeNode *right;
+    TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+};
+
+int findMinimun(vector<int>& depth) {
+    int v = INT_MAX;
+    for(int i : depth) {
+        v = min(v, i);
+    }
+    return v;
+}
+
+void helper(TreeNode* node, vector<vector<string>>& res, vector<int>& depth, vector<int>& vals) {
+    if(node == NULL) return ;
+    vals.push_back(node->val);
+    if(!node->left && !node->right) {
+        int v = findMinimun(depth);
+        vector<string> vv;
+        for(int i = 0; i < vals.size(); ++i) {
+            string s(depth[i] - v, ' ');
+            s += to_string(vals[i]);
+            vv.push_back(s);
+        }
+        vals.pop_back();
+        res.push_back(vv);
+        return ;
+    }
+    int d = depth.back();
+    depth.push_back(d - 1);
+    helper(node->left, res, depth, vals);
+    depth.pop_back();
+    depth.push_back(d + 1);
+    helper(node->right, res, depth, vals);
+    depth.pop_back();
+    vals.pop_back();
+}
+
+vector<vector<string>> fun(TreeNode* node) {
+    vector<vector<string>> res;
+    vector<int> depth;
+    vector<int> vals;
+    depth.push_back(0);
+    helper(node, res, depth, vals);
+    return res;
+}
+
+int main() {
+    TreeNode* n1 = new TreeNode(1);
+    TreeNode* n2 = new TreeNode(2);
+    TreeNode* n3 = new TreeNode(3);
+    TreeNode* n4 = new TreeNode(4);
+    TreeNode* n5 = new TreeNode(5);
+    n1->left = n2;
+    n2->left = n3;
+    n1->right = n4;
+    n4->left = n5;
+    
+    for(vector<string> v : fun(n1)) {
+        for(string s : v ) {
+            cout << s << endl;
+        }
+        cout << endl;
+    }
+
+}

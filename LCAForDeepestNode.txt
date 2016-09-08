@@ -1,0 +1,30 @@
+给一个 二叉树 ， 求最深节点的最小公共父节点。
+
+    1
+  2   3
+     5  6    return 3.
+
+    1  
+  2   3
+4    5 6   retrun 1. 
+
+TreeNode* dfs(TreeNode* node, int& depth) {
+	if(node == NULL) {
+		depth = 0;
+		return NULL;
+	}
+	int l, r;
+	l = r = 0;
+	TreeNode* left = dfs(node->left, l);
+	TreeNode* right = dfs(node->right, r);
+	if(l == r) return node;
+	else if(l < r) return right;
+	else return left;
+}
+
+int commonAncestor(TreeNode * root){
+    int depth = 0;
+    TreeNode* LCA = dfs(root, depth);
+    cout << "Tree depth:" << depth << endl;
+    return LCA->val;
+}

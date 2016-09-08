@@ -1,0 +1,64 @@
+Given a string, we can "shift" each of its letter to its successive letter, for example: "abc" -> "bcd". We can keep "shifting" which forms the sequence:
+
+"abc" -> "bcd" -> ... -> "xyz"
+
+Given a list of strings which contains only lowercase alphabets, group all strings that belong to the same shifting sequence.
+
+For example, given: ["abc", "bcd", "acef", "xyz", "az", "ba", "a", "z"],
+Return:
+
+[
+  ["abc","bcd","xyz"],
+  ["az","ba"],
+  ["acef"],
+  ["a","z"]
+]
+
+
+
+
+class Solution {
+public:
+    vector<vector<string>> groupStrings(vector<string>& strings) {
+        vector<vector<string>> res;
+    if(strings.size() == 0) return res;
+    sort(strings.begin(), strings.end());
+    unordered_map<int, vector<vector<string>>> hash;
+    for(string s : strings) {
+        bool insert = false;
+        if(hash.find(s.size()) != hash.end()) {
+            for(vector<string>& v : hash[s.size()]) {
+                for(int x = v.size() - 1; x >= 0; x--) {
+                    string ss = v[x];
+                    int dis = abs(ss[0] - s[0]);
+                    int i = 1;
+                    for(; i < s.size(); ++i) {
+                        if((s[i] - ss[i] + 26) % 26 != dis) {
+                            break;
+                        }
+                    }
+                    if(i == s.size()) {
+                        v.push_back(s);
+                        insert = true;
+                    }
+                    if(insert) break;
+                }
+            }
+        }
+        if(hash.find(s.size()) == hash.end() || insert == false) {
+            vector<vector<string>> v;
+            if(hash.find(s.size()) != hash.end()) {
+                v = hash[s.size()];
+            }
+            v.push_back(vector<string>(1, s));
+            hash[s.size()] = v;
+        }
+    }
+    for(auto it = hash.begin(); it != hash.end(); ++it) {
+        for(vector<string>& v : it->second) {
+            res.push_back(v);
+        }
+    }
+    return res;
+    }
+};

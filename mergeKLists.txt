@@ -1,0 +1,55 @@
+class Solution {
+public:
+    ListNode* mergeKLists(vector<ListNode*>& lists) {
+        ListNode* head = NULL;
+        ListNode* tail = NULL;
+        
+        MergeIterator it(lists);
+        while (it.hasNext()) {
+            ListNode* n = it.next();
+            if (tail) {
+                tail->next = n;
+            } else {
+                head = n;
+            }
+            tail = n;
+            tail->next = NULL;
+        }
+        
+        return head;
+    }
+    
+private:
+    class MergeIterator {
+    public:
+        MergeIterator(vector<ListNode*> &lists) {
+            for (auto list : lists) {
+                if (list) heap.push(list);
+            }
+        }
+        
+        bool hasNext() {
+            return !heap.empty();
+        }
+        
+        ListNode* next() {
+            ListNode* n = heap.top();
+            heap.pop();
+            if (n->next) {
+                heap.push(n->next);
+            }
+            return n;
+        }
+        
+    private:
+        struct Greater
+        {
+          bool operator() (ListNode* &n1, ListNode* &n2) const
+          {
+              return n1->val > n2->val;
+          }
+        };
+        
+        priority_queue<ListNode*, vector<ListNode*>, Greater> heap;
+    };
+};

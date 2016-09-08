@@ -1,0 +1,37 @@
+linkedlist,找出最大的两个, 然后swap，不是swap value，swap reference
+
+
+void swap(ListNode*& node) {
+    if(node == NULL || node->next == NULL) return ;
+    
+    ListNode* dummy = new ListNode();
+    dummy->next = node;
+    ListNode* prevF = dummy;
+    ListNode* prevS = dummy;
+    ListNode* prev = dummy;
+    int first = INT_MIN;
+    int second = INT_MIN;
+    while(prev->next != NULL) {
+        if(prev->next->val > first) {
+            second = first;
+            first = prev->next->val;
+            prevS = prevF;
+            prevF = prev;
+        } else if (prev->next->val > second) {
+            second = prev->next->val;
+            prevS = prev;
+        }
+        prev = prev->next;
+    }
+    
+    // swap
+    ListNode* large = prevF->next;
+    ListNode* two = prevS->next;
+    prevF->next = two;
+    prevS->next = large;
+    
+    ListNode* tmp = large->next;
+    large->next = two->next;
+    two->next = tmp;
+}
+

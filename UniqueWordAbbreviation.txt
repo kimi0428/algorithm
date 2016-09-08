@@ -1,0 +1,28 @@
+class ValidWordAbbr {
+public:
+    ValidWordAbbr(vector<string> &dictionary) {
+        for(string& s : dictionary) {
+            string tmp = helper(s);
+            if(hash.find(tmp) == hash.end()) {
+                hash[tmp] = unordered_set<string>();
+            }
+            hash[tmp].insert(s);
+        }
+    }
+
+    bool isUnique(string word) {
+        string tmp = helper(word);
+        if(hash.find(tmp) == hash.end() || hash[tmp].count(word) == hash[tmp].size()) {
+            return true;
+        }
+        return false;
+    }
+
+private:
+    string helper(const string& s) {
+        if(s.size() <= 2) return s;
+        return to_string(s[0]) + to_string(s.size() - 2) + to_string(s.back());
+    }
+
+    unordered_map<string, unordered_set<string>> hash;
+};

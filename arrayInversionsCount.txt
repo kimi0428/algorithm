@@ -1,0 +1,45 @@
+int mergeSort(int arr[], int size) {
+    int* tmp = (int*)malloc(sizeof(int) * size);
+    return _mergesort(arr, tmp, 0, size - 1);
+}
+
+int _mergesort(int arr[], int tmp[], int left, int right) {
+    int mid, inv_count = 0;
+    if(right > left) {
+        mid = (left + right) / 2;
+        inv_count = _mergesort(arr, tmp, left, mid);
+        inv_count += _mergesort(arr, tmp, mid + 1, right);
+
+        inv_count += merge(arr, tmp, left, mid, right);
+    }
+    return inv_count;
+}
+
+int merge(int arr[], int tmp[], int left, int mid, int right) {
+    int i, j, k;
+    int inv_count = 0;
+
+    i = left;
+    j = mid;
+    k = left;
+    while(i < mid && j <= right) {
+        if(arr[i] <= arr[j]) {
+            tmp[k++] = arr[i++];
+        } else {
+            tmp[k++] = arr[j++];
+            inv_count += (mid - i);
+        }
+    }
+
+    while(i < mid) {
+        tmp[k++] = arr[i++];
+    }
+    while(j <= right) {
+        tmp[k++] = arr[j++];
+    }
+
+    for(int i = left; i <= right; ++i) {
+        arr[i] = tmp[i];
+    }
+    return inv_count;
+}

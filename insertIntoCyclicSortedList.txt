@@ -1,0 +1,19 @@
+	void helper(ListNode* node, int x) {
+		if(node == NULL) {
+			node = new ListNode(x);
+			x->next = node;
+			return ;
+		}
+		ListNode* cur = node;
+		ListNode* pre = NULL;
+		do {
+			pre = cur;
+			cur = cur->next;
+			if(pre->val <= x && x <= cur->val) break;
+			if(pre->val > cur->val) && (x < cur->val || x > pre->val) break;
+		} while(cur != node)
+
+		ListNode* n = new ListNode(x);
+		n->next = cur;
+		pre->next = n;
+	}

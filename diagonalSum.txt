@@ -1,0 +1,25 @@
+各对角线之和
+
+1 2 3
+4 5 6
+7 8 9
+[1, 6, 15, 14, 9]
+[7, 12, 16, 8, 3]
+
+case 1:
+vector<int> get_diagonal_sum(vector<vector<int>>& m) {
+    int row = (int)m.size();
+    int col = (int)m[0].size();
+    vector<int> res(row + col - 1, 0);
+    //int offset = row - 1;
+    for(int i = 0; i < row; ++i) {
+        for(int j = col - 1; j >= 0; --j) {
+            int x = j + i;
+            res[x] += m[i][j];
+        }
+    }
+    return res;
+}
+
+case 2:
+uncomment line: int offset = row - 1;

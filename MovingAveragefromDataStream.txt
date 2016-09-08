@@ -1,0 +1,33 @@
+MovingAverage m = new MovingAverage(3);
+m.next(1) = 1
+m.next(10) = (1 + 10) / 2
+m.next(3) = (1 + 10 + 3) / 3
+m.next(5) = (10 + 3 + 5) / 3
+
+class MovingAverage {
+private:
+    vector<int> v;
+    int num;
+    double sum;
+public:
+    /** Initialize your data structure here. */
+    MovingAverage(int size) {
+        num = 0;
+        sum = 0;
+        vector<int> temp(size,0);
+        v = temp;
+    }
+    
+    double next(int val) {
+        sum += val;
+        if(num >= v.size()) {
+            int pos = num % v.size();
+            sum -= v[pos];
+            v[pos] = val;
+        } else {
+            v[num] = val;
+        }
+        num++;
+        return num < v.size() ? sum / num : sum / v.size();
+    }
+};

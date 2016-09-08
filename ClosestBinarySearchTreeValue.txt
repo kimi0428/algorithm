@@ -1,0 +1,27 @@
+class Solution {
+public:
+
+    void helper(TreeNode* node, double target, int& res, double& diff) {
+        if(node == NULL) return;
+        if(abs(node->val - target) < diff) {
+            diff = abs(node->val - target);
+            res = node->val;
+        }
+        if(node->val > target) {
+            helper(node->left, target, res, diff );
+        } else if (node->val < target) {
+            helper(node->right, target, res, diff);
+        } else {
+            res = node->val;
+            diff = 0;
+            return;
+        }
+    }
+
+    int closestValue(TreeNode* root, double target) {
+        int res = 0;
+        double diff = numeric_limits<double>::max();
+        helper(root, target, res, diff);
+        return res;
+    }
+};
