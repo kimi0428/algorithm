@@ -1,0 +1,21 @@
+TreeNode* getNext(TreeNode* node) {
+	if(node == NULL) return NULL;
+
+	if(node->right != NULL) {
+		TreeNode* res = node->right;
+		while(res->left != NULL) {
+			res = res->left;
+		}
+		return res;
+	} else {
+		if(node->parent->left == node) {
+			return node->parent;
+		} else {
+			while(node->parent != NULL && node->parent->left != node) {
+				node = node->parent;
+			}
+			if(node->parent == NULL) return NULL;
+			return node->parent;
+		}
+	}
+}
