@@ -17,6 +17,7 @@ TreeNode* dfs(TreeNode* node, int& depth) {
 	l = r = 0;
 	TreeNode* left = dfs(node->left, l);
 	TreeNode* right = dfs(node->right, r);
+	depth = max(l, r) + 1;
 	if(l == r) return node;
 	else if(l < r) return right;
 	else return left;
